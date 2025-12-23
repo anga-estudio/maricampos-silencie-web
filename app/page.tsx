@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const CTA_LINK = "https://example.com"; // Substituir pelo link real
 
@@ -65,6 +65,20 @@ function FAQItem({
 }
 
 export default function Home() {
+  const [isSoundOn, setIsSoundOn] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const toggleSound = () => {
+    if (audioRef.current) {
+      if (isSoundOn) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsSoundOn(!isSoundOn);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-cream text-foreground font-sans">
       {/* Hero Section with Video Background */}
@@ -82,6 +96,36 @@ export default function Home() {
             type="video/mp4"
           />
         </video>
+
+        {/* Ocean Sound */}
+        <audio ref={audioRef} loop>
+          <source
+            src="https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3"
+            type="audio/mpeg"
+          />
+        </audio>
+
+        {/* Sound Toggle Button */}
+        <button
+          onClick={toggleSound}
+          className="absolute top-6 right-6 z-20 flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 text-white transition-all hover:bg-white/30"
+          aria-label={isSoundOn ? "Desativar som" : "Ativar som"}
+        >
+          {isSoundOn ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          )}
+          <span className="text-sm">{isSoundOn ? "Som ligado" : "Som"}</span>
+        </button>
+
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40" />
 
