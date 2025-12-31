@@ -2,38 +2,39 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [emailSent, setEmailSent] = useState(false);
 
   const supabase = createClient();
+  const router = useRouter();
 
-  const handleSendMagicLink = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/authentication/callback`,
-      },
+      password,
     });
 
     if (error) {
-      if (error.message.includes("Signups not allowed")) {
-        setError("Este email não está cadastrado no sistema.");
+      if (error.message.includes("Invalid login credentials")) {
+        setError("Email ou senha incorretos.");
+      } else if (error.message.includes("Email not confirmed")) {
+        setError("Email não confirmado. Verifique sua caixa de entrada.");
       } else {
         setError(error.message);
       }
     } else {
-      setEmailSent(true);
+      router.push("/home");
     }
 
     setLoading(false);
@@ -56,82 +57,70 @@ export default function LoginPage() {
           <h1 className="text-2xl font-light text-green text-center mb-2">
             Área do Aluno
           </h1>
+          <p className="text-muted text-center mb-8 text-sm">
+            Entre com seu email e senha
+          </p>
 
-          {!emailSent ? (
-            <>
-              <p className="text-muted text-center mb-8 text-sm">
-                Entre com seu email para acessar
-              </p>
-
-              {error && (
-                <div className="mb-6 p-3 bg-terracotta/10 border border-terracotta/20 rounded-lg text-terracotta text-sm text-center">
-                  {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSendMagicLink}>
-                <div className="mb-6">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-foreground mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu@email.com"
-                    required
-                    className="w-full px-4 py-3 border border-green/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-green/30 bg-cream/50"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-green text-white py-3 rounded-full font-medium hover:bg-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? "Enviando..." : "Enviar link de acesso"}
-                </button>
-              </form>
-            </>
-          ) : (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="text-green"
-                >
-                  <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2" />
-                  <path d="M22 6v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6" />
-                  <path d="M22 6l-10 7L2 6" />
-                </svg>
-              </div>
-              <p className="text-muted mb-2">
-                Enviamos um link de acesso para
-              </p>
-              <p className="font-medium text-foreground mb-6">{email}</p>
-              <p className="text-muted text-sm mb-6">
-                Verifique sua caixa de entrada e clique no link para entrar.
-              </p>
-              <button
-                onClick={() => {
-                  setEmailSent(false);
-                  setEmail("");
-                }}
-                className="text-muted text-sm hover:text-foreground transition-colors"
-              >
-                Usar outro email
-              </button>
+          {error && (
+            <div className="mb-6 p-3 bg-terracotta/10 border border-terracotta/20 rounded-lg text-terracotta text-sm text-center">
+              {error}
             </div>
           )}
+
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="seu@email.com"
+                required
+                className="w-full px-4 py-3 border border-green/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-green/30 bg-cream/50"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
+                Senha
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="w-full px-4 py-3 border border-green/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-green/30 bg-cream/50"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green text-white py-3 rounded-full font-medium hover:bg-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Entrando..." : "Entrar"}
+            </button>
+          </form>
+
+          <p className="text-center mt-4">
+            <Link
+              href="/authentication/forgot-password"
+              className="text-sm text-muted hover:text-green transition-colors"
+            >
+              Esqueci minha senha
+            </Link>
+          </p>
         </div>
 
         <p className="text-center text-muted text-sm mt-8">

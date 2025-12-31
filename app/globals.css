@@ -35,6 +35,20 @@ a,
 [role="button"],
 input[type="submit"],
 input[type="button"],
-select {
-  cursor: pointer;
+input[type="checkbox"],
+input[type="radio"],
+select,
+label[for],
+summary,
+[onclick],
+[tabindex]:not([tabindex="-1"]) {
+  cursor: pointer !important;
+}
+
+/* Garantir que botões desabilitados tenham cursor correto */
+button:disabled,
+input:disabled,
+select:disabled,
+[disabled] {
+  cursor: not-allowed !important;
 }

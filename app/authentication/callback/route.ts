@@ -9,11 +9,12 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
-  // Redireciona para login em caso de erro
-  return NextResponse.redirect(`${origin}/authentication/sign-in`);
+  // Redirecionar para página de erro em caso de falha
+  return NextResponse.redirect(`${origin}/authentication/sign-in?error=callback`);
 }
