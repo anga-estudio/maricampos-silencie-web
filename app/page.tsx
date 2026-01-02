@@ -54,6 +54,7 @@ const programContent = [
       "Programa de meditação guiada de 21 dias",
       "Práticas focadas em: presença, silêncio mental, autorresponsabilidade, consciência emocional e relação com pensamentos",
     ],
+    image: "/photos/card-1.webp",
   },
   {
     title: "Encontros ao vivo",
@@ -61,6 +62,7 @@ const programContent = [
       "Dois encontros online ao vivo com a Mari Campos",
       "Espaço para aprofundar temas como: presença, respiração e sustentação da prática",
     ],
+    image: "/photos/card-2.png",
   },
   {
     title: "Yoga",
@@ -68,12 +70,14 @@ const programContent = [
       "Uma aula de yoga presencial",
       "Uma aula de yoga online",
     ],
+    image: "/photos/card-3.png",
   },
   {
     title: "Comunidade",
     items: [
       "Acesso a uma comunidade exclusiva no WhatsApp",
     ],
+    image: "/photos/card-4.png",
   },
 ];
 
@@ -323,16 +327,25 @@ export default function Home() {
           </h2>
           <div className="grid gap-8 md:grid-cols-2">
             {programContent.map((section) => (
-              <div key={section.title} className="rounded-2xl bg-white p-8 shadow-sm">
-                <h3 className="mb-4 text-xl font-medium text-green"><BoldSilencie>{section.title}</BoldSilencie></h3>
-                <ul className="space-y-3">
-                  {section.items.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-muted">
-                      <span className="text-green">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div key={section.title} className="relative rounded-2xl overflow-hidden min-h-[280px]">
+                <Image
+                  src={section.image}
+                  alt={section.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50" />
+                <div className="relative z-10 p-8 h-full flex flex-col justify-end">
+                  <h3 className="mb-4 text-xl font-medium text-white">{section.title}</h3>
+                  <ul className="space-y-3">
+                    {section.items.map((item) => (
+                      <li key={item} className="flex items-start gap-3 text-white/90">
+                        <span className="text-white">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
