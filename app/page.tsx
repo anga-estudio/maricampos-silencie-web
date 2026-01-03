@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const CTA_LINK = "https://wa.me/5564992463702";
 
@@ -55,7 +55,7 @@ const programContent = [
   {
     title: "Meditação guiada",
     items: [
-      "Vinte e um dias de meditação guiada",
+      "21 dias de meditação guiada",
       "Práticas diárias, progressivas e acessíveis",
       "Acesso simples, direto no celular",
       "Acompanhamento e condução cuidadosa ao longo da jornada",
@@ -75,7 +75,7 @@ const programContent = [
     title: "Bônus exclusivos",
     items: [
       "Workshop exclusivo de Pranayama (respiração consciente aplicada à vida real)",
-      "Aula extra com nutricionista convidada sobre comida limpa, alimentação consciente e inflamação",
+      "Aula com a nutricionista Mariane Ulhôa convidada sobre comida limpa, alimentação consciente e desinflamação",
     ],
     image: "/photos/card-3.png",
   },
@@ -83,19 +83,19 @@ const programContent = [
     title: "Premiações",
     items: [
       "Reconhecimento para quem se comprometer com o processo",
-      "As pessoas mais engajadas concorrem a prêmios especiais",
+      "As pessoas mais engajadas ganharão prêmios especiais",
     ],
     image: "/photos/card-4.png",
   },
 ];
 
 const rewards: { text: string; bold?: string; suffix?: string }[] = [
-  { text: "Uma vaga de mentoria individual com Mari Campos" },
+  { text: "Uma vaga de mentoria com Mari Campos" },
   { text: "Uma tiragem de carta de oráculo" },
   { text: "Um mês de aulas de yoga" },
   { text: "Uma almofada de meditação" },
   { text: "Um kit de produtos naturais e suplementos" },
-  { text: "Uma vaga no programa ", bold: "Desinflame", suffix: ", da nutricionista Mari Ulhoa (programa de emagrecimento consciente)" },
+  { text: "Uma vaga no programa Desinflame, da nutricionista Mariane Ulhôa (programa de emagrecimento consciente)" },
 ];
 
 function FAQItem({
@@ -134,15 +134,56 @@ function FAQItem({
 export default function Home() {
   const [isSoundOn, setIsSoundOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Tenta iniciar o áudio na primeira interação do usuário (necessário para mobile)
+  useEffect(() => {
+    let audioStarted = false;
+
+    const startAudioOnInteraction = () => {
+      if (!audioStarted && audioRef.current) {
+        audioStarted = true;
+        audioRef.current.play().then(() => {
+          setIsSoundOn(true);
+        }).catch(() => {
+          // Se falhar, o usuário pode ativar manualmente
+        });
+      }
+    };
+
+    // Garantir que o vídeo sempre toque
+    const ensureVideoPlays = () => {
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {});
+      }
+    };
+
+    // Eventos que indicam interação do usuário
+    const events = ["click", "touchstart", "scroll", "keydown"];
+    events.forEach((event) => {
+      document.addEventListener(event, startAudioOnInteraction, { once: true });
+    });
+
+    // Tentar iniciar vídeo imediatamente
+    ensureVideoPlays();
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, startAudioOnInteraction);
+      });
+    };
+  }, []);
 
   const toggleSound = () => {
     if (audioRef.current) {
       if (isSoundOn) {
         audioRef.current.pause();
+        setIsSoundOn(false);
       } else {
-        audioRef.current.play();
+        audioRef.current.play().then(() => {
+          setIsSoundOn(true);
+        }).catch(() => {});
       }
-      setIsSoundOn(!isSoundOn);
     }
   };
 
@@ -152,11 +193,17 @@ export default function Home() {
       <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
         {/* Video Background */}
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover"
+          disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback"
+          className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+          style={{
+            WebkitAppearance: "none",
+          }}
         >
           <source
             src="https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_30fps.mp4"
@@ -238,7 +285,7 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="mx-auto max-w-4xl px-6 py-24">
+      <section className="mx-auto max-w-4xl px-6 pt-24">
         <div className="grid gap-12 md:grid-cols-2 md:items-center">
           <div>
             <h2 className="mb-8 text-3xl font-light tracking-tight text-green">
@@ -261,34 +308,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Training Benefits Section */}
+      {/* Program Content Section */}
       <section className="py-24">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="mb-4 text-center text-3xl font-light tracking-tight text-green">
-            O que você recebe no <strong>Silencie</strong>
+          <h2 className="mb-12 text-center text-3xl font-light tracking-tight text-green">
+            Durante os 21 dias do <strong>Silencie</strong>
           </h2>
-          <p className="mb-12 text-center text-green max-w-2xl mx-auto">
-            Uma experiência completa de presença ao longo de vinte e um dias
-          </p>
-          <div className="flex flex-col gap-6 max-w-lg mx-auto">
-            {[
-              "Acesso ao programa de meditação guiada de vinte e um dias",
-              "Práticas diárias organizadas e progressivas",
-              "Dois encontros online ao vivo com a mentora",
-              "Uma aula de yoga presencial e uma online",
-              "Workshop bônus de Pranayama (respiração)",
-              "Aula bônus com nutricionista (alimentação consciente)",
-              "Participação nas premiações por comprometimento",
-            ].map((item, index) => (
-              <div key={item} className="flex items-center gap-4">
-                <span className="w-8 h-8 rounded-full bg-green/10 flex items-center justify-center text-green text-sm font-medium">
-                  {index + 1}
-                </span>
-                <span className="text-lg text-green">{item}</span>
+          <div className="grid gap-8 md:grid-cols-2">
+            {programContent.map((section) => (
+              <div key={section.title} className="rounded-2xl border border-green/20 p-8">
+                <h3 className="mb-4 text-xl font-medium text-green">{section.title}</h3>
+                <ul className="space-y-3">
+                  {section.items.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-green">
+                      <span className="text-green">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-          <div className="mt-12 text-center">
+        </div>
+      </section>
+
+      {/* Even If Section */}
+      <section className="pb-24">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="text-center">
             <p className="text-lg text-green mb-4">Mesmo que você:</p>
             <div className="flex flex-wrap justify-center gap-4">
               {[
@@ -309,21 +356,21 @@ export default function Home() {
       <section className="py-24 bg-green">
         <div className="mx-auto max-w-4xl px-6">
           <h2 className="mb-12 text-center text-3xl font-light tracking-tight text-white">
-            Um treino diário, simples e guiado
+            Um treino diário, simples e guiado que vai te ajudar
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
             {[
               "Desacelerar o barulho da mente que nunca para e te deixa exausta",
               "Sair do modo alerta constante, onde o corpo vive tensionado e reagindo a tudo",
               "Dar clareza pra pensamentos embaralhados, pra você conseguir finalmente se ouvir",
-              "Soltar o peso emocional acumulado — o que você sente, pensa e nem sabe nomear",
+              "Soltar o peso emocional acumulado, o que você sente, pensa e nem sabe nomear",
               "Acalmar a irritação e a ansiedade, que viram sua companhia diária sem você querer",
               "Construir presença, quando tudo em volta parece te puxar pra mil direções",
               "Criar espaço interno, pra parar de viver só reagindo e começar a escolher",
               "Reconstruir o seu centro, pra que o caos de fora não vire caos dentro",
               "Fortalecer sua estabilidade emocional, pra parar de oscilar entre euforia e exaustão",
               "Aprender a lidar com a mente que divaga o tempo todo (a famosa \"mente macaco\")",
-              "Acessar descanso de verdade, não só sono — descanso no corpo, na mente, no emocional",
+              "Acessar descanso de verdade, não só sono, descanso no corpo, na mente, no emocional",
               "Se sentir em casa dentro de você, mesmo depois de anos vivendo no automático",
             ].map((item) => (
               <div key={item} className="flex items-start gap-3 p-4">
@@ -335,27 +382,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Program Content Section */}
-      <section className="py-24">
+      {/* Rewards Section */}
+      <section className="py-24 border-b border-green/10">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="mb-4 text-center text-3xl font-light tracking-tight text-green">
-            Durante os vinte e um dias do <strong>Silencie</strong>
+          <h2 className="mb-6 text-center text-3xl font-light tracking-tight text-green">
+            Premiações por comprometimento
           </h2>
           <p className="mb-12 text-center text-green max-w-2xl mx-auto">
-            Você vai participar de uma experiência completa de presença, que inclui:
+            Durante os 21 dias, vamos reconhecer quem realmente se comprometer com o processo. As pessoas mais engajadas ganham:
           </p>
-          <div className="grid gap-8 md:grid-cols-2">
-            {programContent.map((section) => (
-              <div key={section.title} className="rounded-2xl border border-green/20 p-8">
-                <h3 className="mb-4 text-xl font-medium text-green">{section.title}</h3>
-                <ul className="space-y-3">
-                  {section.items.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-green">
-                      <span className="text-green">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+          <div className="grid gap-6 md:grid-cols-2 md:grid-rows-3">
+            {rewards.map((reward, index) => (
+              <div key={index} className="flex items-center gap-4 p-5 rounded-lg border border-green/20 bg-white">
+                <span className="flex-shrink-0 w-10 h-10 rounded-full bg-green/10 flex items-center justify-center">
+                  <span className="text-green text-lg">✦</span>
+                </span>
+                <span className="text-green">
+                  {reward.text}
+                  {reward.bold && <strong>{reward.bold}</strong>}
+                  {reward.suffix}
+                </span>
               </div>
             ))}
           </div>
@@ -392,35 +438,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Rewards Section */}
-      <section className="py-24 border-b border-green/10">
-        <div className="mx-auto max-w-4xl px-6">
-          <p className="text-center text-sm uppercase tracking-widest text-green/60 mb-4">Premiações por comprometimento</p>
-          <h2 className="mb-6 text-center text-3xl font-light tracking-tight text-green">
-            Reconhecimento para quem se comprometer
-          </h2>
-          <p className="mb-12 text-center text-green max-w-2xl mx-auto">
-            Durante os vinte e um dias, vamos reconhecer quem realmente se comprometer com o processo. As pessoas mais engajadas concorrem a:
-          </p>
-          <div className="grid gap-6 md:grid-cols-2 md:grid-rows-3">
-            {rewards.map((reward, index) => (
-              <div key={index} className="flex items-center gap-4 p-5 rounded-lg border border-green/20 bg-white">
-                <span className="flex-shrink-0 w-10 h-10 rounded-full bg-green/10 flex items-center justify-center">
-                  <span className="text-green text-lg">✦</span>
-                </span>
-                <span className="text-green">
-                  {reward.text}
-                  {reward.bold && <strong>{reward.bold}</strong>}
-                  {reward.suffix}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Quote Section */}
-      <section className="py-24">
+      <section className="pb-24">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <blockquote className="text-2xl font-light leading-relaxed text-green md:text-3xl">
             &ldquo;Não é sobre esvaziar a mente, mas sobre encontrar espaço dentro do caos.&rdquo;
