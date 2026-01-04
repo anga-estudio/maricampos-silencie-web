@@ -75,7 +75,7 @@ const programContent = [
     title: "Bônus exclusivos",
     items: [
       "Workshop exclusivo de Pranayama (respiração consciente aplicada à vida real)",
-      "Aula com a nutricionista Mariane Ulhôa convidada sobre comida limpa, alimentação consciente e desinflamação",
+      "Aula com a nutricionista convidada Mariane Ulhôa sobre comida limpa, alimentação consciente e desinflamação",
     ],
     image: "/photos/card-3.png",
   },
