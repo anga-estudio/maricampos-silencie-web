@@ -88,12 +88,13 @@ const rewards: { text: string; bold?: string; suffix?: string }[] = [
   { text: "Uma almofada de meditação" },
   { text: "Um kit de produtos naturais e suplementos" },
   { text: "Uma vaga no programa Desinflame, da nutricionista Mariane Ulhôa (programa de emagrecimento consciente)" },
+  { text: "Journal exclusivo do Silencie" },
 ];
 
 const testimonials = [
   {
     name: "Roberta Ludwig",
-    image: "/photos/testimonial-1.webp",
+    image: "/photos/testimonial-1.jpg",
     message: "Eu me sentia mais frágil, mais confusa, mais melancólica. Depois das práticas senti muito mais confiança nas técnicas de autoconhecimento, me interessei por entender quais eram os sentimentos que vinham e por que vinham. Entendi que as emoções são ótimas e podemos nos tranquilizar mesmo nos momentos turbulentos. Percebo que raramente senti novamente os batimentos cardíacos excessivamente acelerados, como acontecia antes. Sei perceber quando uma crise vai se instalar... Aceito a tristeza muito bem, prezo muito mais pelo meu descanso. Adoro ficar em silêncio e em ambientes de maior serenidade. Leio sobre yoga, respiração, e escuto muitos e diversos mantras. As aulas com a Mari são como uma massagem, uma comida gostosa, um dia de férias bem leve. São aulas de carinho com meu corpo.",
   },
   {
@@ -434,17 +435,9 @@ export default function Home() {
             priority
             className="mx-auto mb-12"
           />
-          <p className="mx-auto max-w-2xl text-xl leading-relaxed text-white/90 mb-12">
+          <p className="mx-auto max-w-2xl text-xl leading-relaxed text-white/90">
             O <strong>Silencie</strong> ensina, por meio da prática diária de meditação, como sair do piloto automático, parar de viver reativo e ansioso, e aprender a habitar a própria mente com mais clareza, gentileza e confiança.
           </p>
-          <a
-            href={CTA_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block rounded-full bg-green px-8 py-4 text-lg font-medium text-white transition-all hover:bg-green/90"
-          >
-            Quero participar
-          </a>
         </div>
 
         {/* Scroll indicator */}
@@ -533,6 +526,16 @@ export default function Home() {
                 </span>
               </div>
             ))}
+          </div>
+          <div className="mt-12 text-center">
+            <a
+              href={CTA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-green px-8 py-4 text-lg font-medium text-white transition-all hover:bg-green/90"
+            >
+              Quero participar
+            </a>
           </div>
         </div>
       </section>
