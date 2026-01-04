@@ -93,7 +93,7 @@ const rewards: { text: string; bold?: string; suffix?: string }[] = [
 const testimonials = [
   {
     name: "Roberta Ludwig",
-    image: "/photos/testimonial-1.jpg",
+    image: "/photos/testimonial-1.webp",
     message: "Eu me sentia mais frágil, mais confusa, mais melancólica. Depois das práticas senti muito mais confiança nas técnicas de autoconhecimento, me interessei por entender quais eram os sentimentos que vinham e por que vinham. Entendi que as emoções são ótimas e podemos nos tranquilizar mesmo nos momentos turbulentos. Percebo que raramente senti novamente os batimentos cardíacos excessivamente acelerados, como acontecia antes. Sei perceber quando uma crise vai se instalar... Aceito a tristeza muito bem, prezo muito mais pelo meu descanso. Adoro ficar em silêncio e em ambientes de maior serenidade. Leio sobre yoga, respiração, e escuto muitos e diversos mantras. As aulas com a Mari são como uma massagem, uma comida gostosa, um dia de férias bem leve. São aulas de carinho com meu corpo.",
   },
   {
@@ -148,8 +148,8 @@ function TestimonialsCarousel() {
         </>
       )}
 
-      <div className="grid gap-8 md:grid-cols-[280px_1fr] md:items-center min-h-[400px] md:min-h-[280px]">
-        <div className="relative aspect-square rounded-2xl overflow-hidden mx-auto md:mx-0 w-64 md:w-full bg-green/10">
+      <div className="grid gap-12 md:grid-cols-[200px_1fr] md:items-center min-h-[400px] md:min-h-[280px]">
+        <div className="relative aspect-square rounded-full overflow-hidden mx-auto md:mx-0 w-48 md:w-full bg-green/10">
           {current.image ? (
             <Image
               src={current.image}
