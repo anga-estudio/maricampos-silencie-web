@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 
-const CTA_LINK = "https://wa.me/5564992463702";
+const CTA_LINK = "https://checkout.infinitepay.io/maricamposyogi/717WnI7wLH";
 
 function BoldSilencie({ children }: { children: string }) {
   const parts = children.split(/(Silencie)/g);
@@ -89,6 +89,193 @@ const rewards: { text: string; bold?: string; suffix?: string }[] = [
   { text: "Um kit de produtos naturais e suplementos" },
   { text: "Uma vaga no programa Desinflame, da nutricionista Mariane Ulhôa (programa de emagrecimento consciente)" },
 ];
+
+const testimonials = [
+  {
+    name: "Roberta Ludwig",
+    image: "/photos/testimonial-1.jpg",
+    message: "Eu me sentia mais frágil, mais confusa, mais melancólica. Depois das práticas senti muito mais confiança nas técnicas de autoconhecimento, me interessei por entender quais eram os sentimentos que vinham e por que vinham. Entendi que as emoções são ótimas e podemos nos tranquilizar mesmo nos momentos turbulentos. Percebo que raramente senti novamente os batimentos cardíacos excessivamente acelerados, como acontecia antes. Sei perceber quando uma crise vai se instalar... Aceito a tristeza muito bem, prezo muito mais pelo meu descanso. Adoro ficar em silêncio e em ambientes de maior serenidade. Leio sobre yoga, respiração, e escuto muitos e diversos mantras. As aulas com a Mari são como uma massagem, uma comida gostosa, um dia de férias bem leve. São aulas de carinho com meu corpo.",
+  },
+  {
+    name: "Ana Paula de Oliveira",
+    image: "/photos/testimonial-2.jpg",
+    message: "Tive a felicidade de ser apresentada, por amigas muito queridas, à Mari, essa profissional incrível, que conduz a prática de yoga, além de outras ferramentas de autoconhecimento, com técnica, leveza e intensidade ao mesmo tempo. 🥰 Mari é uma pessoa linda, que conduz seu trabalho com pura doação, sensibilidade e empatia! ❤️",
+  },
+];
+
+function TestimonialsCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const current = testimonials[currentIndex];
+
+  return (
+    <div className="relative">
+      {testimonials.length > 1 && (
+        <>
+          <button
+            onClick={prevTestimonial}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-14 w-10 h-10 rounded-full border border-green/20 flex items-center justify-center text-green hover:bg-green/5 transition-colors bg-white z-10"
+            aria-label="Depoimento anterior"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button
+            onClick={nextTestimonial}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-14 w-10 h-10 rounded-full border border-green/20 flex items-center justify-center text-green hover:bg-green/5 transition-colors bg-white z-10"
+            aria-label="Próximo depoimento"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </>
+      )}
+
+      <div className="grid gap-8 md:grid-cols-[280px_1fr] md:items-center min-h-[400px] md:min-h-[280px]">
+        <div className="relative aspect-square rounded-2xl overflow-hidden mx-auto md:mx-0 w-64 md:w-full bg-green/10">
+          {current.image ? (
+            <Image
+              src={current.image}
+              alt={current.name}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-green/40">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+          )}
+        </div>
+        <div>
+          <blockquote className="text-lg leading-relaxed text-green/90 mb-6">
+            &ldquo;{current.message}&rdquo;
+          </blockquote>
+          <p className="font-medium text-green">{current.name}</p>
+        </div>
+      </div>
+
+      {testimonials.length > 1 && (
+        <div className="flex justify-center gap-2 mt-8">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === currentIndex ? "bg-green" : "bg-green/20"
+              }`}
+              aria-label={`Ir para depoimento ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PricingCard() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isPromoActive, setIsPromoActive] = useState(true);
+
+  useEffect(() => {
+    const promoEndDate = new Date("2026-01-05T19:00:00-03:00").getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = promoEndDate - now;
+
+      if (difference <= 0) {
+        setIsPromoActive(false);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((difference % (1000 * 60)) / 1000),
+      });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const promoPrice = "118,00";
+  const regularPrice = "138,00";
+
+  return (
+    <div className="space-y-8">
+      {isPromoActive && (
+        <div className="space-y-4">
+          <p className="text-sm font-medium text-green/40 uppercase tracking-wider">
+            Oferta especial termina em
+          </p>
+          <div className="flex justify-center gap-3">
+            {[
+              { value: timeLeft.days, label: "dias" },
+              { value: timeLeft.hours, label: "horas" },
+              { value: timeLeft.minutes, label: "min" },
+              { value: timeLeft.seconds, label: "seg" },
+            ].map((item) => (
+              <div key={item.label} className="flex flex-col items-center">
+                <span className="text-3xl md:text-4xl font-light text-green tabular-nums">
+                  {String(item.value).padStart(2, "0")}
+                </span>
+                <span className="text-xs text-green/60 uppercase">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {isPromoActive && (
+          <p className="text-green/50 line-through text-lg">
+            R$ {regularPrice}
+          </p>
+        )}
+        <div className="flex items-baseline justify-center gap-2">
+          <span className="text-green/60 text-xl">R$</span>
+          <span className="text-5xl md:text-6xl font-light text-green">
+            {isPromoActive ? promoPrice : regularPrice}
+          </span>
+        </div>
+      </div>
+
+      <div className="pt-4">
+        <a
+          href={CTA_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block w-full rounded-full bg-green px-8 py-4 text-lg font-medium text-white transition-all hover:bg-green/90"
+        >
+          Garantir minha vaga
+        </a>
+      </div>
+    </div>
+  );
+}
 
 function FAQItem({
   question,
@@ -400,8 +587,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-24 border-t border-b border-green/10">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-12 text-center text-3xl font-light tracking-tight text-green">
+            O que dizem sobre a experiência
+          </h2>
+          <TestimonialsCarousel />
+        </div>
+      </section>
+
       {/* Instructor Section - Mari Campos */}
-      <section className="mx-auto max-w-4xl px-6 pt-12 pb-24">
+      <section className="mx-auto max-w-4xl px-6 pt-24 pb-24">
         <div className="grid gap-12 md:grid-cols-2 md:items-center">
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
             <Image
@@ -431,7 +628,7 @@ export default function Home() {
       </section>
 
       {/* Quote Section */}
-      <section className="pb-24">
+      <section>
         <div className="mx-auto max-w-3xl px-6 text-center">
           <blockquote className="text-2xl font-light leading-relaxed text-green md:text-3xl">
             &ldquo;Não é sobre esvaziar a mente, mas sobre encontrar espaço dentro do caos.&rdquo;
@@ -439,8 +636,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="border-t border-green/10" />
+      {/* Pricing Section */}
+      <section className="py-24 bg-white">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="mb-4 text-3xl font-light tracking-tight text-green">
+            Pronto para o <strong>Silencie</strong>?
+          </h2>
+          <p className="mb-12 text-green/80">
+            Dê o primeiro passo em direção a uma vida mais presente e serena.
+          </p>
+
+          <div>
+            <PricingCard />
+          </div>
+        </div>
+      </section>
 
       {/* FAQ Section */}
       <section className="py-24 bg-green">
@@ -453,26 +663,6 @@ export default function Home() {
               <FAQItem key={faq.question} question={faq.question} answer={faq.answer} isLast={index === faqs.length - 1} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-24">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="mb-6 text-3xl font-light tracking-tight text-green md:text-4xl">
-            Pronto para o <strong>Silencie</strong>?
-          </h2>
-          <p className="mb-12 text-lg text-green">
-            Dê o primeiro passo em direção a uma vida mais presente e serena.
-          </p>
-          <a
-            href={CTA_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block rounded-full bg-green px-10 py-4 text-lg font-medium text-white transition-all hover:bg-green/90"
-          >
-            Começar minha jornada
-          </a>
         </div>
       </section>
 
