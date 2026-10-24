@@ -31,10 +31,11 @@ Keys consumed, and the shape each one must keep in sync with the panel editor:
 | `program_includes` | `{meditation[], meetings[], bonus[]}` | the three "você vai receber" cards |
 | `rewards` | `string[]` | premiações grid |
 | `daily_training` | `string[]` | "treino diário" green section |
-| `testimonials` | `[{name, photo, text}]` | testimonials carousel |
 | `faq` | `[{question, answer}]` | FAQ accordion |
 
-`price` is a number formatted to pt-BR at render; `start_date` is `YYYY-MM-DD` formatted to a long pt-BR date. `photo` is a public Supabase Storage URL written by the panel's uploader, so that host is allowlisted in [next.config.ts](next.config.ts) `images.remotePatterns`; an empty `photo` falls back to an inline avatar placeholder.
+`price` is a number formatted to pt-BR at render; `start_date` is `YYYY-MM-DD` formatted to a long pt-BR date.
+
+**Testimonials are deliberately not CMS-driven.** They live in the `TESTIMONIALS` constant in `page.tsx`, with photos served from `public/photos/`, so the carousel keeps working with no external dependency. The `site_content` row for `silencie/testimonials` still exists and the panel still has a Depoimentos tab, but nothing reads either one — editing that tab has no effect on the site. Change the constant instead, or wire the key back up if the CMS becomes the source of truth again.
 
 Sections **not** in the panel stay hardcoded in `page.tsx`: "O que é o Silencie", "Mesmo que você", the instructor bio, the pull quote, and the footer. The three program card titles and images are also fixed — only their bullet lists come from the CMS.
 

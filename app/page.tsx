@@ -34,6 +34,26 @@ const PROGRAM_CARDS: {
   { title: "Bônus exclusivos", image: "/photos/card-3.png", key: "bonus" },
 ];
 
+// Depoimentos ficam fixos aqui de propósito, fora do CMS. As fotos vivem em
+// public/photos/ e não dependem de nenhum serviço externo.
+const TESTIMONIALS: Testimonial[] = [
+  {
+    name: "Roberta Ludwig",
+    photo: "/photos/testimonial-1.jpg",
+    text: "Eu me sentia mais frágil, mais confusa, mais melancólica. Depois das práticas senti muito mais confiança nas técnicas de autoconhecimento, me interessei por entender quais eram os sentimentos que vinham e por que vinham. Entendi que as emoções são ótimas e podemos nos tranquilizar mesmo nos momentos turbulentos. Percebo que raramente senti novamente os batimentos cardíacos excessivamente acelerados, como acontecia antes. Sei perceber quando uma crise vai se instalar... Aceito a tristeza muito bem, prezo muito mais pelo meu descanso. Adoro ficar em silêncio e em ambientes de maior serenidade. Leio sobre yoga, respiração, e escuto muitos e diversos mantras. As aulas com a Mari são como uma massagem, uma comida gostosa, um dia de férias bem leve. São aulas de carinho com meu corpo.",
+  },
+  {
+    name: "Ana Paula de Oliveira",
+    photo: "/photos/testimonial-2.jpg",
+    text: "Tive a felicidade de ser apresentada, por amigas muito queridas, à Mari, essa profissional incrível, que conduz a prática de yoga, além de outras ferramentas de autoconhecimento, com técnica, leveza e intensidade ao mesmo tempo. 🥰 Mari é uma pessoa linda, que conduz seu trabalho com pura doação, sensibilidade e empatia! ❤️",
+  },
+  {
+    name: "Maria Miguel",
+    photo: "/photos/testimonial-3.jpg",
+    text: "As práticas com a Mari são muito especiais para mim. As aulas vão muito além dos movimentos físicos. As reflexões que ela sempre traz no início e no final da aula trazem foco também para a nossa parte espiritual/energética, o que propicia uma experiência muito mais profunda do que uma aula de yoga comum, proporcionando nos bem estar físico e psicológico. Além disso, ela demonstra uma conexão muito especial com seus alunos, transformando cada prática em momentos de cura para todos.",
+  },
+];
+
 export default async function Home() {
   const content = await getSiteContent("silencie");
 
@@ -41,7 +61,6 @@ export default async function Home() {
   const programIncludes = (content.program_includes ?? {}) as ProgramIncludes;
   const rewards = (content.rewards ?? []) as string[];
   const dailyTraining = (content.daily_training ?? []) as string[];
-  const testimonials = (content.testimonials ?? []) as Testimonial[];
   const faq = (content.faq ?? []) as FaqItem[];
 
   const CTA_LINK = general.payment_link;
@@ -295,16 +314,14 @@ export default async function Home() {
       </section>
 
       {/* Testimonials Section */}
-      {testimonials.length > 0 && (
-        <section className="py-24 border-t border-b border-green/10">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="mb-12 text-center text-3xl font-light tracking-tight text-green">
-              O que dizem sobre a experiência
-            </h2>
-            <TestimonialsCarousel testimonials={testimonials} />
-          </div>
-        </section>
-      )}
+      <section className="py-24 border-t border-b border-green/10">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-12 text-center text-3xl font-light tracking-tight text-green">
+            O que dizem sobre a experiência
+          </h2>
+          <TestimonialsCarousel testimonials={TESTIMONIALS} />
+        </div>
+      </section>
 
       {/* FAQ Section */}
       {faq.length > 0 && (
